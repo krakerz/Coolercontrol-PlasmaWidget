@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --bg: #1d1d1d;
+    --panel: #262626;
+    --panel2: #2f2f2f;
+    --fg: #f7f6ec;
+    --muted: #9a9a9a;
+    --accent: #6aa9ff;
+    --danger: #ff6b6b;
+    --border: #3a3a3a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, "Segoe UI", "Noto Sans", sans-serif;
+    font-size: 13px;
+    height: 100%;
+    overflow: hidden;
+  }
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    flex: 0 0 auto;
+  }
+  header h1 {
+    font-size: 14px;
+    margin: 0;
+    font-weight: 600;
+  }
+  header .status {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  header .status.error {
+    color: var(--danger);
+  }
+  button.icon {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px 6px;
+    border-radius: 6px;
+  }
+  button.icon:hover {
+    background: var(--panel2);
+    color: var(--fg);
+  }
+  #error-banner {
+    padding: 8px 12px;
+    background: rgba(255, 107, 107, 0.12);
+    color: var(--danger);
+    font-size: 12px;
+    display: none;
+    flex: 0 0 auto;
+  }
+  #settings {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    flex: 0 0 auto;
+  }
+  #settings label {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  #settings input {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+  #settings .row {
+    display: flex;
+    gap: 8px;
+  }
+  #settings .row label {
+    flex: 1;
+  }
+  #settings .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  #settings button.primary {
+    background: var(--accent);
+    color: #10203a;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 4px 0 12px 0;
+  }
+  .device-section {
+    padding: 10px 12px 2px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .sensor-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+  }
+  .sensor-row:hover {
+    background: var(--panel);
+  }
+  .sensor-row .label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sensor-row .rename-input {
+    flex: 1;
+    min-width: 0;
+    background: var(--panel2);
+    border: 1px solid var(--accent);
+    color: var(--fg);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .sensor-row .value {
+    font-variant-numeric: tabular-nums;
+    color: var(--fg);
+    min-width: 64px;
+    text-align: right;
+  }
+  .sensor-row .toggles {
+    display: flex;
+    gap: 2px;
+  }
+  .toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 6px;
+    width: 24px;
+    height: 22px;
+    font-size: 12px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .toggle-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(106, 169, 255, 0.15);
+  }
+  .toggle-btn.hide-btn.active {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: rgba(255, 107, 107, 0.15);
+  }
+  .toggle-btn svg {
+    width: 13px;
+    height: 13px;
+    vertical-align: middle;
+    fill: currentColor;
+  }
+  .sensor-icon {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sensor-icon svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+  }
+  .sensor-row.is-hidden {
+    opacity: 0.55;
+  }
+  .hidden-section-label {
+    padding: 10px 12px 2px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--danger);
+    border-top: 1px dashed var(--border);
+    margin-top: 6px;
+  }
+  #settings .orientation-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--fg);
+  }
+  #settings .orientation-row label {
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    color: var(--fg);
+    cursor: pointer;
+  }
+  #empty {
+    padding: 24px 12px;
+    color: var(--muted);
+    text-align: center;
+    display: none;
+  }
+  footer {
+    flex: 0 0 auto;
+    padding: 6px 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>CoolerControl</h1>
+    <div style="display:flex; align-items:center; gap:6px;">
+      <span class="status" id="status-text"></span>
+      <button class="icon" id="settings-toggle" title="Settings">&#9881;</button>
+    </div>
+  </header>
+
+  <div id="error-banner"></div>
+
+  <div id="settings">
+    <div class="row">
+      <label>Host
+        <input type="text" id="cfg-host" placeholder="localhost">
+      </label>
+      <label style="max-width:90px;">Port
+        <input type="number" id="cfg-port" placeholder="11987">
+      </label>
+    </div>
+    <div class="row">
+      <label>Username
+        <input type="text" id="cfg-username" placeholder="CCAdmin">
+      </label>
+      <label>Password
+        <input type="password" id="cfg-password" placeholder="(unchanged)">
+      </label>
+    </div>
+    <div class="orientation-row">
+      <span style="color: var(--muted);">Panel layout:</span>
+      <label><input type="radio" name="orientation" id="orient-horizontal" value="horizontal"> Horizontal</label>
+      <label><input type="radio" name="orientation" id="orient-vertical" value="vertical"> Vertical</label>
+    </div>
+    <div class="orientation-row">
+      <span style="color: var(--muted);">Sensor labels:</span>
+      <button class="toggle-btn" id="labels-toggle" title="Show sensor name next to the value on the widget" style="width:auto; padding:0 10px;">Aa</button>
+      <label style="flex-direction:row; align-items:center; gap:4px; color: var(--muted);">Font size
+        <input type="number" id="cfg-font-size" placeholder="theme" min="8" max="32" style="width:60px;">
+      </label>
+      <label style="flex-direction:row; align-items:center; gap:4px; color: var(--muted);">Value spacing
+        <input type="number" id="cfg-spacing" min="0" max="64" style="width:60px;">
+      </label>
+    </div>
+    <div class="row">
+      <label style="max-width:120px;">Refresh (sec)
+        <input type="number" id="cfg-refresh" min="1" max="300" step="1">
+      </label>
+    </div>
+    <div class="actions">
+      <button class="primary" id="cfg-save">Save &amp; reconnect</button>
+    </div>
+  </div>
+
+  <div id="list"></div>
+  <div id="empty">No sensors to show. Set your CoolerControl credentials in settings (&#9881;).</div>
+
+  <footer>
+    <span id="count-text">0 sensors</span>
+    <div>
+      <button class="icon" id="show-hidden-btn" title="Toggle hidden sensors" style="font-size:11px;">Hidden (0)</button>
+      <button class="icon" id="refresh-btn" title="Refresh now">&#8635;</button>
+    </div>
+  </footer>
+</div>
+
+<script>
+  var state = {
+    sensors: [],
+    pinnedKeys: [],
+    hiddenKeys: [],
+    hasError: false,
+    errorMessage: "",
+    apiHost: "localhost",
+    apiPort: 11987,
+    username: "CCAdmin",
+    hasPassword: false,
+    panelOrientation: "horizontal",
+    showSensorLabels: false,
+    fontPixelSize: 0,
+    sensorSpacing: 6,
+    refreshIntervalMs: 5000
+  };
+
+  var showHidden = false;
+
+  // Small self-contained icon set (no external font/icon library) — shape
+  // by sensor kind, color by owning device type, similar in spirit to
+  // CoolerControl's own colored per-sensor icons.
+  var ICONS = {
+    temp: '<svg viewBox="0 0 24 24"><rect x="10" y="3" width="4" height="12" rx="2"/><circle cx="12" cy="18" r="4"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>',
+    fan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="7"/><line x1="12" y1="17" x2="12" y2="22"/><line x1="2" y1="12" x2="7" y2="12"/><line x1="17" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="8.5" y2="8.5"/><line x1="15.5" y1="15.5" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="15.5" y2="8.5"/><line x1="8.5" y1="15.5" x2="4.9" y2="19.1"/></svg>',
+    pulse: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,12 7,12 9,5 13,19 15,12 22,12"/></svg>',
+    dot: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg>',
+    pin: '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>',
+    eye: '<svg viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>',
+    eyeSlash: '<svg viewBox="0 0 24 24"><path d="M2 4.27 3.28 3 21 20.72 19.73 22l-3.06-3.06A11.6 11.6 0 0 1 12 20C5 20 2 13 2 13a17.6 17.6 0 0 1 4.06-5.61L2 4.27zM12 8a4 4 0 0 1 4 4c0 .52-.11 1.01-.29 1.46l-1.55-1.55a2 2 0 0 0-2.07-2.07L10.54 8.3A4 4 0 0 1 12 8zm0-4c7 0 10 7 10 7a17.7 17.7 0 0 1-2.42 3.6l-1.45-1.45A15.6 15.6 0 0 0 20 13s-3-7-8-7c-.9 0-1.73.14-2.5.38L8.02 4.9A9.9 9.9 0 0 1 12 4z"/></svg>',
+    pencil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>'
+  };
+
+  var DEVICE_COLORS = {
+    CPU: "#ff6b6b",
+    GPU: "#ffa94d",
+    Liquidctl: "#4dabf7",
+    Hwmon: "#63e6be",
+    CustomSensors: "#da77f2"
+  };
+
+  function iconFor(unit) {
+    switch (unit) {
+      case "°C": return ICONS.temp;
+      case "W": return ICONS.bolt;
+      case "RPM": return ICONS.fan;
+      case "%": return ICONS.fan;
+      case "MHz": return ICONS.pulse;
+      default: return ICONS.dot;
+    }
+  }
+
+  function colorFor(deviceType) {
+    return DEVICE_COLORS[deviceType] || "#9a9a9a";
+  }
+
+  function sendToHost(obj) {
+    obj._seq = (sendToHost._seq = (sendToHost._seq || 0) + 1);
+    document.title = "cc:" + JSON.stringify(obj);
+  }
+
+  function el(tag, className, text) {
+    var e = document.createElement(tag);
+    if (className) e.className = className;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  function startRename(labelEl, s) {
+    var input = document.createElement("input");
+    input.type = "text";
+    input.className = "rename-input";
+    input.value = s.label;
+    input.placeholder = s.originalLabel || s.label;
+
+    labelEl.replaceWith(input);
+    input.focus();
+    input.select();
+
+    var committed = false;
+    function commit() {
+      if (committed) return;
+      committed = true;
+      var value = input.value.trim();
+      sendToHost({ cmd: "renameLabel", key: s.key, value: value === s.originalLabel ? "" : value });
+    }
+    input.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") {
+        input.blur();
+      } else if (ev.key === "Escape") {
+        committed = true;
+        render();
+      }
+    });
+    input.addEventListener("blur", commit);
+  }
+
+  function makeSensorRow(s, isHiddenRow) {
+    var row = el("div", "sensor-row" + (isHiddenRow ? " is-hidden" : ""));
+
+    var icon = el("div", "sensor-icon");
+    icon.style.color = colorFor(s.deviceType);
+    icon.innerHTML = iconFor(s.unit);
+    row.appendChild(icon);
+
+    var labelEl = el("div", "label", s.label);
+    row.appendChild(labelEl);
+    row.appendChild(el("div", "value", s.display));
+
+    var toggles = el("div", "toggles");
+
+    var renameBtn = el("button", "toggle-btn");
+    renameBtn.innerHTML = ICONS.pencil;
+    renameBtn.title = "Rename";
+    renameBtn.onclick = function () {
+      startRename(labelEl, s);
+    };
+    toggles.appendChild(renameBtn);
+
+    var pinBtn = el("button", "toggle-btn");
+    pinBtn.innerHTML = ICONS.pin;
+    pinBtn.title = "Pin to panel";
+    if (state.pinnedKeys.indexOf(s.key) !== -1) pinBtn.classList.add("active");
+    pinBtn.onclick = function () {
+      var pinned = state.pinnedKeys.indexOf(s.key) === -1;
+      sendToHost({ cmd: "pin", key: s.key, value: pinned });
+    };
+    toggles.appendChild(pinBtn);
+
+    var isHidden = state.hiddenKeys.indexOf(s.key) !== -1;
+    var hideBtn = el("button", "toggle-btn hide-btn");
+    hideBtn.innerHTML = isHidden ? ICONS.eyeSlash : ICONS.eye;
+    hideBtn.title = isHidden ? "Unhide" : "Hide from list";
+    if (isHidden) hideBtn.classList.add("active");
+    hideBtn.onclick = function () {
+      sendToHost({ cmd: "hide", key: s.key, value: !isHidden });
+    };
+    toggles.appendChild(hideBtn);
+
+    row.appendChild(toggles);
+    return row;
+  }
+
+  function render() {
+    var statusEl = document.getElementById("status-text");
+    var bannerEl = document.getElementById("error-banner");
+    if (state.hasError) {
+      statusEl.textContent = "Error";
+      statusEl.className = "status error";
+      bannerEl.textContent = state.errorMessage || "Unknown error";
+      bannerEl.style.display = "block";
+    } else {
+      statusEl.textContent = "Connected";
+      statusEl.className = "status";
+      bannerEl.style.display = "none";
+    }
+
+    var listEl = document.getElementById("list");
+    var emptyEl = document.getElementById("empty");
+    listEl.innerHTML = "";
+
+    var visible = state.sensors.filter(function (s) {
+      return state.hiddenKeys.indexOf(s.key) === -1;
+    });
+    var hidden = state.sensors.filter(function (s) {
+      return state.hiddenKeys.indexOf(s.key) !== -1;
+    });
+
+    if (!state.sensors.length) {
+      emptyEl.style.display = "block";
+    } else {
+      emptyEl.style.display = "none";
+      var byDevice = {};
+      var order = [];
+      visible.forEach(function (s) {
+        if (!byDevice[s.device]) {
+          byDevice[s.device] = [];
+          order.push(s.device);
+        }
+        byDevice[s.device].push(s);
+      });
+
+      order.forEach(function (device) {
+        listEl.appendChild(el("div", "device-section", device));
+        byDevice[device].forEach(function (s) {
+          listEl.appendChild(makeSensorRow(s, false));
+        });
+      });
+
+      if (showHidden && hidden.length) {
+        listEl.appendChild(el("div", "hidden-section-label", "Hidden (" + hidden.length + ")"));
+        hidden.forEach(function (s) {
+          listEl.appendChild(makeSensorRow(s, true));
+        });
+      }
+    }
+
+    document.getElementById("count-text").textContent = visible.length + " sensors" + (hidden.length ? " · " + hidden.length + " hidden" : "");
+    document.getElementById("show-hidden-btn").textContent = (showHidden ? "Hide " : "Show ") + "hidden (" + hidden.length + ")";
+    document.getElementById("show-hidden-btn").style.display = hidden.length ? "inline-block" : "none";
+
+    document.getElementById("cfg-host").value = state.apiHost || "";
+    document.getElementById("cfg-port").value = state.apiPort || "";
+    document.getElementById("cfg-username").value = state.username || "";
+    document.getElementById("cfg-password").placeholder = state.hasPassword ? "(unchanged)" : "(not set)";
+    document.getElementById("orient-horizontal").checked = state.panelOrientation !== "vertical";
+    document.getElementById("orient-vertical").checked = state.panelOrientation === "vertical";
+    document.getElementById("labels-toggle").classList.toggle("active", !!state.showSensorLabels);
+    document.getElementById("cfg-font-size").value = state.fontPixelSize || "";
+    document.getElementById("cfg-spacing").value = (state.sensorSpacing === undefined || state.sensorSpacing === null) ? "" : state.sensorSpacing;
+    document.getElementById("cfg-refresh").value = state.refreshIntervalMs ? Math.round(state.refreshIntervalMs / 1000) : "";
+  }
+
+  // Called from the native side (QML) whenever fresh data is available.
+  window.ccUpdate = function (payload) {
+    state = payload;
+    render();
+  };
+
+  document.getElementById("settings-toggle").addEventListener("click", function () {
+    var panel = document.getElementById("settings");
+    panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+  });
+
+  document.getElementById("refresh-btn").addEventListener("click", function () {
+    sendToHost({ cmd: "refresh" });
+  });
+
+  document.getElementById("show-hidden-btn").addEventListener("click", function () {
+    showHidden = !showHidden;
+    render();
+  });
+
+  document.getElementById("orient-horizontal").addEventListener("change", function () {
+    if (this.checked) sendToHost({ cmd: "setOrientation", value: "horizontal" });
+  });
+  document.getElementById("orient-vertical").addEventListener("change", function () {
+    if (this.checked) sendToHost({ cmd: "setOrientation", value: "vertical" });
+  });
+
+  document.getElementById("labels-toggle").addEventListener("click", function () {
+    sendToHost({ cmd: "setShowLabels", value: !state.showSensorLabels });
+  });
+
+  document.getElementById("cfg-font-size").addEventListener("change", function () {
+    sendToHost({ cmd: "setFontSize", value: this.value });
+  });
+
+  document.getElementById("cfg-spacing").addEventListener("change", function () {
+    sendToHost({ cmd: "setSensorSpacing", value: this.value });
+  });
+
+  document.getElementById("cfg-refresh").addEventListener("change", function () {
+    var seconds = parseFloat(this.value);
+    if (!isNaN(seconds) && seconds > 0) {
+      sendToHost({ cmd: "setRefreshInterval", value: Math.round(seconds * 1000) });
+    }
+  });
+
+  document.getElementById("cfg-save").addEventListener("click", function () {
+    sendToHost({
+      cmd: "saveCredentials",
+      host: document.getElementById("cfg-host").value,
+      port: document.getElementById("cfg-port").value,
+      username: document.getElementById("cfg-username").value,
+      password: document.getElementById("cfg-password").value
+    });
+    document.getElementById("cfg-password").value = "";
+  });
+
+  sendToHost({ cmd: "ready" });
+</script>
+</body>
+</html>

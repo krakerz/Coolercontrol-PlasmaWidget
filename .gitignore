@@ -1,0 +1,9 @@
+# QML/Qt cache artifacts
+*.qmlc
+*.jsc
+
+# Editor/OS cruft
+.directory
+*~
+.vscode/
+.idea/

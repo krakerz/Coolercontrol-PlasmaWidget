@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name=""/>
+
+  <group name="General">
+    <entry name="apiHost" type="String">
+      <default>localhost</default>
+    </entry>
+    <entry name="apiPort" type="Int">
+      <default>11987</default>
+    </entry>
+    <entry name="username" type="String">
+      <default>CCAdmin</default>
+    </entry>
+    <entry name="password" type="String">
+      <default></default>
+    </entry>
+    <entry name="refreshIntervalMs" type="Int">
+      <default>5000</default>
+    </entry>
+    <!-- Comma-separated sensor keys. Format: "<deviceUid>:temp:<name>" or
+         "<deviceUid>:chan:<name>:<rpm|duty|watts|freq>". Populated/edited
+         from the Sensors config page, not typed by hand. -->
+    <entry name="pinnedKeys" type="String">
+      <default>68c50044c7245bc1429a0fa6a35c75ee60a75eb44be31a56bb41f07e60b0f4dc:temp:temp1,97910386cac9bfce54b2c224e4aaef42cd953440cb57f1ff5ff46ac183bf338e:temp:temp2</default>
+    </entry>
+    <entry name="hiddenKeys" type="String">
+      <default></default>
+    </entry>
+    <entry name="panelOrientation" type="String">
+      <default>horizontal</default>
+    </entry>
+    <entry name="showSensorLabels" type="Bool">
+      <default>false</default>
+    </entry>
+    <!-- 0 means "use the Plasma theme's default font size". -->
+    <entry name="fontPixelSize" type="Int">
+      <default>0</default>
+    </entry>
+    <!-- Extra pixel gap between a sensor's label and its value, on top of
+         the layout's own base spacing. -->
+    <entry name="sensorSpacing" type="Int">
+      <default>6</default>
+    </entry>
+    <!-- JSON object mapping sensor key -> custom display label, e.g.
+         {"<uid>:chan:total:watts":"TP"}. Edited from the Sensors config
+         page, not typed by hand. -->
+    <entry name="sensorLabelOverrides" type="String">
+      <default>{}</default>
+    </entry>
+  </group>
+</kcfg>
