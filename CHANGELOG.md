@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [2.1.0] — 2026-09-18
+
+### Added
+- Widget self-installs its icon into the user's icon theme on first load — a plain `.plasmoid` install no longer needs a separate script/step for the icon to show up
+
+## [2.0.1] — 2026-09-18
+
+### Fixed
+- Editing any settings field (host/port/username/font size/spacing/refresh interval) could get silently overwritten by a refresh tick while typing
+- Number-spinner arrows clipped short placeholder/values in the narrow settings fields
+
 ## [2.0.0] — 2026-09-18
 
 ### Changed

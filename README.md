@@ -80,11 +80,12 @@ The compact view only shows pinned sensors — pin at least one from the full
 sensor list first.
 
 **The widget's icon shows up blank in the widget picker?**
-The picker resolves icons by system icon-theme name, not from inside the
-`.plasmoid` package — only `./install.sh` also copies the icon into
-`~/.local/share/icons/hicolor/scalable/apps/`. Installing the `.plasmoid`
-via drag-and-drop skips that step; run `./install.sh` from a clone instead,
-or copy `contents/icons/cc-monitor.svg` there yourself.
+The picker resolves icons by system icon-theme name — installing the
+`.plasmoid` itself never registers anything into your icon theme. The
+widget self-installs its icon the first time it actually loads (once
+added to a panel/desktop), so this fixes itself the next time you open the
+picker after that. It stays blank only for that very first look, before
+the widget has ever been added anywhere.
 
 ## Trademarks & attribution
 

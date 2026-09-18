@@ -401,6 +401,18 @@
     return e;
   }
 
+  // Same class of bug as the sensor-rename fix below: a periodic refresh
+  // tick re-renders the settings panel with the last-known server state,
+  // which would otherwise stomp on whatever the user is actively typing
+  // into one of these fields. Skip only the field currently focused.
+  function setInputValue(id, value) {
+    var input = document.getElementById(id);
+    if (document.activeElement === input) {
+      return;
+    }
+    input.value = value;
+  }
+
   // While non-null, render() is a no-op — a periodic refresh tick calling
   // ccUpdate() mid-edit used to rebuild #list and blow away the in-progress
   // <input>, firing a blur that silently saved whatever partial text was
@@ -547,16 +559,16 @@
     document.getElementById("show-hidden-btn").textContent = (showHidden ? "Hide " : "Show ") + "hidden (" + hidden.length + ")";
     document.getElementById("show-hidden-btn").style.display = hidden.length ? "inline-block" : "none";
 
-    document.getElementById("cfg-host").value = state.apiHost || "";
-    document.getElementById("cfg-port").value = state.apiPort || "";
-    document.getElementById("cfg-username").value = state.username || "";
+    setInputValue("cfg-host", state.apiHost || "");
+    setInputValue("cfg-port", state.apiPort || "");
+    setInputValue("cfg-username", state.username || "");
     document.getElementById("cfg-password").placeholder = state.hasPassword ? "(unchanged)" : "(not set)";
     document.getElementById("orient-horizontal").checked = state.panelOrientation !== "vertical";
     document.getElementById("orient-vertical").checked = state.panelOrientation === "vertical";
     document.getElementById("labels-toggle").classList.toggle("active", !!state.showSensorLabels);
-    document.getElementById("cfg-font-size").value = state.fontPixelSize || "";
-    document.getElementById("cfg-spacing").value = (state.sensorSpacing === undefined || state.sensorSpacing === null) ? "" : state.sensorSpacing;
-    document.getElementById("cfg-refresh").value = state.refreshIntervalMs ? Math.round(state.refreshIntervalMs / 1000) : "";
+    setInputValue("cfg-font-size", state.fontPixelSize || "");
+    setInputValue("cfg-spacing", (state.sensorSpacing === undefined || state.sensorSpacing === null) ? "" : state.sensorSpacing);
+    setInputValue("cfg-refresh", state.refreshIntervalMs ? Math.round(state.refreshIntervalMs / 1000) : "");
   }
 
   // Called from the native side (QML) whenever fresh data is available.

@@ -1,5 +1,6 @@
 import QtQuick
 import org.kde.plasma.plasmoid
+import org.kde.plasma.plasma5support as Plasma5Support
 import "CoolerControlClient.js" as CCClient
 
 PlasmoidItem {
@@ -228,6 +229,24 @@ PlasmoidItem {
         repeat: true
         triggeredOnStart: true
         onTriggered: widgetRoot.refresh()
+    }
+
+    // The widget picker resolves the "Icon" metadata field as a plain
+    // icon-theme name — installing the .plasmoid itself never registers
+    // anything into the user's icon theme, so on a fresh system the icon
+    // shows up blank until this runs at least once. Self-installs it into
+    // the user's icon theme the first time this widget actually loads, so
+    // a plain .plasmoid install needs no separate script/step.
+    Plasma5Support.DataSource {
+        id: iconInstaller
+        engine: "executable"
+        connectedSources: []
+        onNewData: disconnectSource(sourceName)
+
+        Component.onCompleted: {
+            var iconPath = Qt.resolvedUrl("../icons/cc-monitor.svg").toString().replace("file://", "");
+            connectSource("mkdir -p ~/.local/share/icons/hicolor/scalable/apps && cp '" + iconPath + "' ~/.local/share/icons/hicolor/scalable/apps/cc-monitor.svg");
+        }
     }
 
     preferredRepresentation: compactRepresentation
