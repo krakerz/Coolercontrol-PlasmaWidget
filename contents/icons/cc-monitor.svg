@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  Widget icon: CoolerControl's mark with a small KDE Plasma badge overlaid.
+
+  Base mark adapted from org.coolercontrol.CoolerControl.svg:
+  SPDX-FileCopyrightText: 2021 Guy Boldon and contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+  https://gitlab.com/coolercontrol/coolercontrol
+
+  Plasma badge adapted from Breeze's start-here-kde-plasma.svg
+  (KDE e.V., LGPL-3.0-or-later), recolored/simplified for legibility at
+  badge size. "KDE" and the Plasma logo are trademarks of KDE e.V.
+-->
+<svg width="256" height="256" viewBox="0 0 256 256" version="1.1"
+   xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="linearGradient4" x1="0" y1="128" x2="256" y2="128"
+       gradientUnits="userSpaceOnUse">
+      <stop style="stop-color:#4d8cff;stop-opacity:1;" offset="0" />
+      <stop style="stop-color:#ff21ff;stop-opacity:1;" offset="1" />
+    </linearGradient>
+  </defs>
+  <g id="cc-mark">
+    <path d="M 52.802,17.920 A 34.882,34.882 0 1,0 87.683,52.802 A 12.800,12.800 0 0,0 74.883,40.002 A 12.800,12.800 0 0,0 62.083,52.802 A 9.282,9.282 0 1,1 52.802,43.520 A 12.800,12.800 0 0,0 65.602,30.720 A 12.800,12.800 0 0,0 52.802,17.920 Z M 128.000,168.317 A 34.882,34.882 0 1,0 162.882,203.198 A 12.800,12.800 0 0,0 150.082,190.398 A 12.800,12.800 0 0,0 137.282,203.198 A 9.282,9.282 0 1,1 128.000,193.917 A 12.800,12.800 0 0,0 140.800,181.117 A 12.800,12.800 0 0,0 128.000,168.317 Z M 203.198,17.920 A 34.882,34.882 0 1,0 238.080,52.802 A 12.800,12.800 0 0,0 225.280,40.002 A 12.800,12.800 0 0,0 212.480,52.802 A 9.282,9.282 0 1,1 203.198,43.520 A 12.800,12.800 0 0,0 215.998,30.720 A 12.800,12.800 0 0,0 203.198,17.920 Z" style="fill:url(#linearGradient4)" />
+    <path d="M 40.002,74.883 A 12.800,12.800 0 0,1 52.802,62.083 A 12.800,12.800 0 0,1 65.602,74.883 L 65.602,218.400 A 12.800,12.800 0 0,1 52.802,231.200 A 12.800,12.800 0 0,1 40.002,218.400 Z M 115.200,37.600 A 12.800,12.800 0 0,1 128.000,24.800 A 12.800,12.800 0 0,1 140.800,37.600 L 140.800,181.117 A 12.800,12.800 0 0,1 128.000,193.917 A 12.800,12.800 0 0,1 115.200,181.117 Z M 190.398,74.883 A 12.800,12.800 0 0,1 203.198,62.083 A 12.800,12.800 0 0,1 215.998,74.883 L 215.998,218.400 A 12.800,12.800 0 0,1 203.198,231.200 A 12.800,12.800 0 0,1 190.398,218.400 Z" style="fill:url(#linearGradient4)" />
+  </g>
+
+  <circle id="badge-bg" cx="198" cy="198" r="54" fill="#232629" stroke="#eff0f1" stroke-width="4"/>
+  <!-- Positioned via plain <g transform>, not a nested <svg> — QtSvg (what
+       Plasma's icon loader uses) doesn't render nested <svg> viewBoxes. -->
+  <g id="plasma-badge" transform="translate(159,159) scale(0.8125)">
+    <g transform="translate(-384.57144,-483.798)">
+      <g transform="matrix(1.5000005,0,0,1.5000005,-192.28588,-241.89921)">
+        <path d="m425.23807 489.13134-6 6 11.33336 11.33336-11.33337 11.33326 6 6 17.33337-17.33326z" fill-rule="evenodd" fill="#eff0f1"/>
+        <rect x="399.90475" y="489.79797" width="6.6666646" height="6.6666646" rx="3.3333328" fill="#fa8865"/>
+        <rect x="390.57138" y="509.13129" width="9.3333302" height="9.3333302" rx="4.6666498" fill="#63c605"/>
+        <rect x="403.90472" y="528.46466" width="13.333329" height="13.333329" rx="6.6666651" fill="#1b89f3"/>
+      </g>
+    </g>
+  </g>
+</svg>

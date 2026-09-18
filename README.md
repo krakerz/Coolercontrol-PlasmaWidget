@@ -26,28 +26,37 @@ with the CoolerControl project — just a thin client against its existing API.
 Requires a running CoolerControl daemon (`coolercontrold`) reachable over
 HTTP.
 
+Download the `.plasmoid` file from the [Releases](../../releases) page, then
+either:
+
+- Right-click your desktop or panel → **Add Widgets…** → **Get New
+  Widgets…** → **Install Widget From Local File…**, and pick the downloaded
+  `.plasmoid`, or
+- Install it from a terminal:
+
+  ```bash
+  kpackagetool6 --type Plasma/Applet --install coolercontrol-monitor-<version>.plasmoid
+  ```
+
+Then add "CoolerControl Monitor" from the widget picker (Add Widgets…).
+
+## Building from source
+
+No build step for the widget itself — it's a plain QML/JS Plasma 6 KPackage.
+Working from a clone instead of a downloaded `.plasmoid`:
+
 ```bash
 git clone <this-repo-url> ~/Projects/Coolercontrol-PlasmaWidget
 cd ~/Projects/Coolercontrol-PlasmaWidget
 ./install.sh
 ```
 
-Then add "CoolerControl Monitor" from the widget picker (Add Widgets…).
-
-## Building from source
-
-No build step — this is a plain QML/JS Plasma 6 KPackage. `install.sh`
-installs (or upgrades, if already installed) straight from the clone:
+`install.sh` installs (or upgrades, if already installed) straight from the
+clone. To build your own `.plasmoid` archive instead (what CI attaches to
+each release):
 
 ```bash
-./install.sh
-```
-
-To install/upgrade manually instead:
-
-```bash
-kpackagetool6 --type Plasma/Applet --install .   # first install
-kpackagetool6 --type Plasma/Applet --upgrade .   # subsequent updates
+./package.sh   # writes coolercontrol-monitor-<version>.plasmoid
 ```
 
 ## Usage
@@ -69,6 +78,26 @@ enter whatever you configured in CoolerControl itself.
 **Nothing shows up on the panel?**
 The compact view only shows pinned sensors — pin at least one from the full
 sensor list first.
+
+**The widget's icon shows up blank in the widget picker?**
+The picker resolves icons by system icon-theme name, not from inside the
+`.plasmoid` package — only `./install.sh` also copies the icon into
+`~/.local/share/icons/hicolor/scalable/apps/`. Installing the `.plasmoid`
+via drag-and-drop skips that step; run `./install.sh` from a clone instead,
+or copy `contents/icons/cc-monitor.svg` there yourself.
+
+## Trademarks & attribution
+
+- The widget icon is CoolerControl's own mark
+  (`org.coolercontrol.CoolerControl.svg`, © 2021 Guy Boldon and contributors,
+  GPL-3.0-or-later) with a small KDE Plasma badge overlaid, adapted from
+  Breeze's `start-here-kde-plasma.svg`.
+- "CoolerControl" and its logo belong to the [CoolerControl
+  project](https://gitlab.com/coolercontrol/coolercontrol). This widget is
+  an unofficial, unaffiliated client and claims no ownership over them.
+- "KDE", "Plasma", and the Plasma logo are trademarks of [KDE
+  e.V.](https://kde.org). This widget is not endorsed by or affiliated with
+  KDE e.V.
 
 ---
 

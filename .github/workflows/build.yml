@@ -1,0 +1,46 @@
+name: Build
+on:
+  push:
+    branches: [main]
+    paths-ignore: [README.md, CHANGELOG.md, LICENSE, .gitignore]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Resolve version
+        id: version
+        run: echo "version=$(python3 -c "import json; print(json.load(open('metadata.json'))['KPlugin']['Version'])")" >> "$GITHUB_OUTPUT"
+
+      - name: Extract changelog section
+        run: |
+          awk -v v="${{ steps.version.outputs.version }}" '
+            $0 ~ "^## \\[" v "\\]" {f=1; next}
+            f && /^## \[/ {exit}
+            f {print}
+          ' CHANGELOG.md > release-notes.md
+          test -s release-notes.md || { echo "no changelog section for $v"; exit 1; }
+          {
+            echo ""
+            echo "---"
+            echo "[Full changelog](${{ github.server_url }}/${{ github.repository }}/blob/main/CHANGELOG.md)"
+          } >> release-notes.md
+
+      - name: Build .plasmoid
+        run: |
+          chmod +x package.sh
+          ./package.sh
+
+      - name: Draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          tag_name: ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
+          body_path: release-notes.md
+          files: coolercontrol-monitor-${{ steps.version.outputs.version }}.plasmoid

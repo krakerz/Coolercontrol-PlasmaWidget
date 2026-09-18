@@ -8,11 +8,11 @@
         ],
         "Category": "System Information",
         "Description": "Live CPU/GPU/fan/PSU readings pulled from a local CoolerControl daemon",
-        "Icon": "sensors-temperature-symbolic",
-        "Id": "local.coolercontrol.monitor",
+        "Icon": "cc-monitor",
+        "Id": "rie_zel.coolercontrol.monitoring",
         "License": "GPL-3.0-or-later",
         "Name": "CoolerControl Monitor",
-        "Version": "1.1.0"
+        "Version": "2.0.0"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
 }

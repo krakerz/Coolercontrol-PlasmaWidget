@@ -94,6 +94,16 @@
     padding: 6px 8px;
     font-size: 13px;
   }
+  /* Chromium's number-input spinner eats into the box's width, clipping
+     short placeholders/values in the narrow settings fields. */
+  #settings input[type="number"]::-webkit-outer-spin-button,
+  #settings input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  #settings input[type="number"] {
+    -moz-appearance: textfield;
+  }
   #settings .row {
     display: flex;
     gap: 8px;
@@ -391,7 +401,15 @@
     return e;
   }
 
+  // While non-null, render() is a no-op — a periodic refresh tick calling
+  // ccUpdate() mid-edit used to rebuild #list and blow away the in-progress
+  // <input>, firing a blur that silently saved whatever partial text was
+  // typed so far.
+  var editingKey = null;
+
   function startRename(labelEl, s) {
+    editingKey = s.key;
+
     var input = document.createElement("input");
     input.type = "text";
     input.className = "rename-input";
@@ -406,6 +424,7 @@
     function commit() {
       if (committed) return;
       committed = true;
+      editingKey = null;
       var value = input.value.trim();
       sendToHost({ cmd: "renameLabel", key: s.key, value: value === s.originalLabel ? "" : value });
     }
@@ -414,6 +433,7 @@
         input.blur();
       } else if (ev.key === "Escape") {
         committed = true;
+        editingKey = null;
         render();
       }
     });
@@ -467,6 +487,9 @@
   }
 
   function render() {
+    if (editingKey !== null) {
+      return;
+    }
     var statusEl = document.getElementById("status-text");
     var bannerEl = document.getElementById("error-banner");
     if (state.hasError) {

@@ -1,3 +1,6 @@
+# Build artifacts — CI builds and attaches these to releases
+*.plasmoid
+
 # QML/Qt cache artifacts
 *.qmlc
 *.jsc
