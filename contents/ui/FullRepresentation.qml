@@ -32,6 +32,7 @@ Item {
             showSensorLabels: Plasmoid.configuration.showSensorLabels,
             fontPixelSize: Plasmoid.configuration.fontPixelSize,
             sensorSpacing: Plasmoid.configuration.sensorSpacing,
+            iconSpacing: Plasmoid.configuration.iconSpacing,
             refreshIntervalMs: Plasmoid.configuration.refreshIntervalMs
         };
         webViewLoader.item.runJavaScript("window.ccUpdate && window.ccUpdate(" + JSON.stringify(payload) + ")");
@@ -50,6 +51,8 @@ Item {
             widgetRoot.setFontPixelSize(msg.value);
         } else if (msg.cmd === "setSensorSpacing") {
             widgetRoot.setSensorSpacing(msg.value);
+        } else if (msg.cmd === "setIconSpacing") {
+            widgetRoot.setIconSpacing(msg.value);
         } else if (msg.cmd === "setRefreshInterval") {
             widgetRoot.setRefreshIntervalMs(msg.value);
         } else if (msg.cmd === "renameLabel") {

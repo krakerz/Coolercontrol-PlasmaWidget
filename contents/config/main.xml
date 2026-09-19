@@ -45,6 +45,11 @@
     <entry name="sensorSpacing" type="Int">
       <default>6</default>
     </entry>
+    <!-- Extra pixel gap between a sensor's icon and its label/value, on top
+         of the layout's own base spacing. -->
+    <entry name="iconSpacing" type="Int">
+      <default>8</default>
+    </entry>
     <!-- JSON object mapping sensor key -> custom display label, e.g.
          {"<uid>:chan:total:watts":"TP"}. Edited from the Sensors config
          page, not typed by hand. -->

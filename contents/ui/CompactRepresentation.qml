@@ -17,6 +17,12 @@ Item {
     // Extra gap between a sensor's label and its value, on top of the row's
     // own base spacing — only meaningful once a label is actually shown.
     readonly property int valueSpacing: showLabels ? Plasmoid.configuration.sensorSpacing : 0
+    // Icons scale with the configured font size instead of a fixed theme
+    // size, so they stay proportionate at any font-size setting.
+    readonly property int iconSize: Math.round(compact.fontPixelSize * 1.15)
+    // Extra gap between the icon and whatever follows it (label or value) —
+    // the row's own base spacing alone gets cramped once icons scale up.
+    readonly property int iconSpacing: Plasmoid.configuration.iconSpacing
 
     readonly property var deviceColors: ({
             "CPU": "#ff6b6b",
@@ -52,12 +58,12 @@ Item {
     }
 
     Layout.minimumWidth: vertical
-        ? (useLabelTable ? columnLayout.implicitWidth : Kirigami.Units.iconSizes.small) + Kirigami.Units.smallSpacing * 2
+        ? (useLabelTable ? columnLayout.implicitWidth : compact.iconSize) + Kirigami.Units.smallSpacing * 2
         : flowRow.implicitWidth + Kirigami.Units.smallSpacing * 2
     Layout.preferredWidth: Layout.minimumWidth
     Layout.minimumHeight: vertical
         ? (useLabelTable ? columnLayout.implicitHeight : flowRow.implicitHeight) + Kirigami.Units.smallSpacing * 2
-        : Kirigami.Units.iconSizes.small + Kirigami.Units.smallSpacing * 2
+        : compact.iconSize + Kirigami.Units.smallSpacing * 2
     Layout.preferredHeight: Layout.minimumHeight
 
     // Horizontal chip row, or vertical icon(+label)-stack without the
@@ -72,8 +78,8 @@ Item {
         Kirigami.Icon {
             visible: widgetRoot.hasError
             source: "dialog-warning"
-            width: Kirigami.Units.iconSizes.small
-            height: Kirigami.Units.iconSizes.small
+            width: compact.iconSize
+            height: compact.iconSize
         }
 
         Repeater {
@@ -82,8 +88,9 @@ Item {
                 spacing: Kirigami.Units.smallSpacing / 2
                 Image {
                     source: compact.iconUrl(modelData)
-                    Layout.preferredWidth: Kirigami.Units.iconSizes.small * 0.75
-                    Layout.preferredHeight: Kirigami.Units.iconSizes.small * 0.75
+                    Layout.preferredWidth: compact.iconSize
+                    Layout.preferredHeight: compact.iconSize
+                    Layout.rightMargin: compact.iconSpacing
                     sourceSize.width: width
                     sourceSize.height: height
                 }
@@ -120,8 +127,8 @@ Item {
             Layout.fillWidth: true
             Kirigami.Icon {
                 source: "dialog-warning"
-                width: Kirigami.Units.iconSizes.small
-                height: Kirigami.Units.iconSizes.small
+                width: compact.iconSize
+                height: compact.iconSize
             }
         }
 
@@ -132,8 +139,9 @@ Item {
                 spacing: Kirigami.Units.smallSpacing / 2
                 Image {
                     source: compact.iconUrl(modelData)
-                    Layout.preferredWidth: Kirigami.Units.iconSizes.small * 0.75
-                    Layout.preferredHeight: Kirigami.Units.iconSizes.small * 0.75
+                    Layout.preferredWidth: compact.iconSize
+                    Layout.preferredHeight: compact.iconSize
+                    Layout.rightMargin: compact.iconSpacing
                     sourceSize.width: width
                     sourceSize.height: height
                 }

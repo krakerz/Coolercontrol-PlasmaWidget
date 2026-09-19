@@ -12,7 +12,7 @@
         "Id": "rie_zel.coolercontrol.monitoring",
         "License": "GPL-3.0-or-later",
         "Name": "CoolerControl Monitor",
-        "Version": "2.1.0"
+        "Version": "2.2.0"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
 }

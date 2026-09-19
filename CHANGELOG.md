@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [2.2.0] — 2026-09-19
+
+### Added
+- Configurable icon-to-text spacing on the panel
+
+### Changed
+- Sensor/warning icons on the panel now scale with the configured font size instead of a fixed size
+
 ## [2.1.0] — 2026-09-18
 
 ### Added

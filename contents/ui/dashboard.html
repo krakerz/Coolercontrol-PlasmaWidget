@@ -313,6 +313,9 @@
       <label style="max-width:120px;">Refresh (sec)
         <input type="number" id="cfg-refresh" min="1" max="300" step="1">
       </label>
+      <label style="max-width:120px;">Icon spacing
+        <input type="number" id="cfg-icon-spacing" min="0" max="64" step="1">
+      </label>
     </div>
     <div class="actions">
       <button class="primary" id="cfg-save">Save &amp; reconnect</button>
@@ -346,6 +349,7 @@
     showSensorLabels: false,
     fontPixelSize: 0,
     sensorSpacing: 6,
+    iconSpacing: 8,
     refreshIntervalMs: 5000
   };
 
@@ -568,6 +572,7 @@
     document.getElementById("labels-toggle").classList.toggle("active", !!state.showSensorLabels);
     setInputValue("cfg-font-size", state.fontPixelSize || "");
     setInputValue("cfg-spacing", (state.sensorSpacing === undefined || state.sensorSpacing === null) ? "" : state.sensorSpacing);
+    setInputValue("cfg-icon-spacing", (state.iconSpacing === undefined || state.iconSpacing === null) ? "" : state.iconSpacing);
     setInputValue("cfg-refresh", state.refreshIntervalMs ? Math.round(state.refreshIntervalMs / 1000) : "");
   }
 
@@ -608,6 +613,10 @@
 
   document.getElementById("cfg-spacing").addEventListener("change", function () {
     sendToHost({ cmd: "setSensorSpacing", value: this.value });
+  });
+
+  document.getElementById("cfg-icon-spacing").addEventListener("change", function () {
+    sendToHost({ cmd: "setIconSpacing", value: this.value });
   });
 
   document.getElementById("cfg-refresh").addEventListener("change", function () {

@@ -99,6 +99,11 @@ PlasmoidItem {
         Plasmoid.configuration.sensorSpacing = (isNaN(size) || size < 0) ? 0 : Math.min(size, 64);
     }
 
+    function setIconSpacing(value) {
+        var size = parseInt(value, 10);
+        Plasmoid.configuration.iconSpacing = (isNaN(size) || size < 0) ? 0 : Math.min(size, 64);
+    }
+
     function setRefreshIntervalMs(value) {
         var ms = parseInt(value, 10);
         if (isNaN(ms)) {
